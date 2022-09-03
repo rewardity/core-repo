@@ -7,9 +7,10 @@ import { useGlobalState } from "./useGlobal";
 import { AvailableNetworks, networks } from "./networks";
 import { ethers } from "ethers";
 import { Input, VStack } from "@chakra-ui/react";
+import { CrumbsRewardManager } from "./typechain-types";
 
 function App() {
-  const manager = useGlobalState((state) => state.manager);
+  const manager = useGlobalState((state) => state.manager) as CrumbsRewardManager;
   const setProvider = useGlobalState((state) => state.setProvider);
   const setUserAddress = useGlobalState((state) => state.setUserAddress);
   const userAddress = useGlobalState((state) => state.userAddress);
@@ -59,7 +60,7 @@ function App() {
   const handleWithdraw = async () => {
     console.log("Calling [handleWithdraw]");
 
-    const result = await manager.buyMembership(
+    const result = await manager.withdrawTokens(
       parseInt(withdrawId),
       parseInt(withdrawAmount),
       withdrawAddress
