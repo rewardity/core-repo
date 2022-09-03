@@ -17,8 +17,16 @@ function App() {
   const setManager = useGlobalState((state) => state.setManager);
 
   const [addReviewUserId, setAddReviewUserId] = useState("");
+
   const [addLikeFrom, setAddLikeFrom] = useState("");
   const [addLikeTo, setAddLikeTo] = useState("");
+
+  const [buyId, setBuyId] = useState("");
+  const [buyMembership, setBuyMembership] = useState("");
+
+  const [withdrawId, setWithdrawId] = useState("");
+  const [withdrawAmount, setWithdrawAmount] = useState("");
+  const [withdrawAddress, setWithdrawAddress] = useState("");
 
   useEffect(() => {
     console.log(userAddress);
@@ -43,6 +51,29 @@ function App() {
     const result = await manager.addLike(
       parseInt(addLikeFrom),
       parseInt(addLikeTo)
+    );
+
+    console.log(result);
+  };
+
+  const handleWithdraw = async () => {
+    console.log("Calling [handleWithdraw]");
+
+    const result = await manager.buyMembership(
+      parseInt(withdrawId),
+      parseInt(withdrawAmount),
+      withdrawAddress
+    );
+
+    console.log(result);
+  };
+
+  const handleBuy = async () => {
+    console.log("Calling [handleBuy]");
+
+    const result = await manager.buyMembership(
+      parseInt(buyId),
+      parseInt(buyMembership)
     );
 
     console.log(result);
@@ -113,6 +144,36 @@ function App() {
             <Input
               onChange={(e: any) => setAddLikeTo(e.target.value)}
               value={addLikeTo}
+            ></Input>
+          </HStack>
+          <HStack>
+            <Button padding={"30px"} w={"200px"} onClick={() => handleBuy()}>
+              buyMembership
+            </Button>
+            <Input
+              onChange={(e: any) => setBuyId(e.target.value)}
+              value={buyId}
+            ></Input>
+            <Input
+              onChange={(e: any) => setBuyMembership(e.target.value)}
+              value={buyMembership}
+            ></Input>
+          </HStack>
+          <HStack>
+            <Button padding={"30px"} onClick={() => handleWithdraw()}>
+              withdrawTokens
+            </Button>
+            <Input
+              onChange={(e: any) => setWithdrawId(e.target.value)}
+              value={withdrawId}
+            ></Input>
+            <Input
+              onChange={(e: any) => setWithdrawAmount(e.target.value)}
+              value={withdrawAmount}
+            ></Input>
+            <Input
+              onChange={(e: any) => setWithdrawAddress(e.target.value)}
+              value={withdrawAddress}
             ></Input>
           </HStack>
         </VStack>
