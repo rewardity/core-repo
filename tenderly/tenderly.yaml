@@ -6,7 +6,7 @@ actions:
     specs:
       helloWorldTransactions:
         description: Transaction that recorded a fund withdrawal
-        function: CrumbsRewardManager:UserWithdrawal
+        function: hello:action
         trigger:
           type: transaction
           transaction:

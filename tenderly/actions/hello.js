@@ -2,7 +2,7 @@ import { BigNumber, ethers, BigNumberish } from "ethers";
 import TokenContract from "../SimpleToken.json";
 
 // Function is later referenced with this name
-const fundsWithdrawalAction = async (context, event) => {
+const action = async (context, event) => {
   // Log so we can later see what's available in payload
   console.log(event);
   console.log("Withdrawal has been made");
@@ -23,4 +23,4 @@ const fundsWithdrawalAction = async (context, event) => {
 };
 
 // Function must be exported
-module.exports = { fundsWithdrawalAction };
+module.exports = { action };
