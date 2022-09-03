@@ -17,6 +17,17 @@ describe("CrumbsRewardManager", async () => {
         });
     });
     describe("Review action", async () => {
+        it("Cannot be triggered by not an owner", async () => {
+            // given
+            const contract = await ethers.getContractFactory("CrumbsRewardManager");
+            const crumbsRewardManager = await contract.deploy(ethers.Wallet.createRandom().address) as CrumbsRewardManager;
+
+            const crumbsRewardManagerFromAnotherSigner = crumbsRewardManager.connect((await ethers.getSigners())[1]);
+
+            // when
+            await expect(crumbsRewardManagerFromAnotherSigner.addReview(123))
+                .revertedWith("Ownable: caller is not the owner");
+        });
         it("Should have new reviews counted", async () => {
             // given
             const contract = await ethers.getContractFactory("CrumbsRewardManager");
@@ -49,6 +60,17 @@ describe("CrumbsRewardManager", async () => {
         });
     });
     describe("Like action", async () => {
+        it("Cannot be triggered by not an owner", async () => {
+            // given
+            const contract = await ethers.getContractFactory("CrumbsRewardManager");
+            const crumbsRewardManager = await contract.deploy(ethers.Wallet.createRandom().address) as CrumbsRewardManager;
+
+            const crumbsRewardManagerFromAnotherSigner = crumbsRewardManager.connect((await ethers.getSigners())[1]);
+
+            // when
+            await expect(crumbsRewardManagerFromAnotherSigner.addLike(123, 234))
+                .revertedWith("Ownable: caller is not the owner");
+        });
         it("Cannot like if zero balance", async () => {
             // given
             const contract = await ethers.getContractFactory("CrumbsRewardManager");
@@ -105,6 +127,85 @@ describe("CrumbsRewardManager", async () => {
                 .withArgs(user2Id, 1);
             await expect(transaction3).to.emit(crumbsRewardManager, 'UserBalanceChanged')
                 .withArgs(user1Id, 9);
+        });
+    });
+
+    describe("Buy membership action", async () => {
+        const userId = 123;
+
+        it("Cannot be triggered by not an owner", async () => {
+            // given
+            const contract = await ethers.getContractFactory("CrumbsRewardManager");
+            const crumbsRewardManager = await contract.deploy(ethers.Wallet.createRandom().address) as CrumbsRewardManager;
+
+            const crumbsRewardManagerFromAnotherSigner = crumbsRewardManager.connect((await ethers.getSigners())[1]);
+
+            // when
+            await expect(crumbsRewardManagerFromAnotherSigner.buyMembership(userId, 2))
+                .revertedWith("Ownable: caller is not the owner");
+        });
+
+        it("Should be having STANDARD membership by default", async () => {
+            // given
+            const contract = await ethers.getContractFactory("CrumbsRewardManager");
+            const crumbsRewardManager = await contract.deploy(ethers.Wallet.createRandom().address) as CrumbsRewardManager;
+
+            // then
+            expect(await crumbsRewardManager.userMembership(userId)).to.equal(0);
+        });
+
+        it("Should buy a new STANDARD membership", async () => {
+            // given
+            const contract = await ethers.getContractFactory("CrumbsRewardManager");
+            const crumbsRewardManager = await contract.deploy(ethers.Wallet.createRandom().address) as CrumbsRewardManager;
+            await crumbsRewardManager.addReview(userId);
+
+            // when
+            const transaction = await crumbsRewardManager.buyMembership(userId, 1);
+
+            // then
+            expect(await crumbsRewardManager.userTokensBalance(userId)).to.equal(0);
+            expect(await crumbsRewardManager.userMembership(userId)).to.equal(1);
+            await expect(transaction).to.emit(crumbsRewardManager, 'MembershipChanged')
+                .withArgs(userId, 1);
+            await expect(transaction).to.emit(crumbsRewardManager, 'UserBalanceChanged')
+                .withArgs(userId, 0);
+        });
+
+        it("Should buy a new ADVANCED membership", async () => {
+            // given
+            const contract = await ethers.getContractFactory("CrumbsRewardManager");
+            const crumbsRewardManager = await contract.deploy(ethers.Wallet.createRandom().address) as CrumbsRewardManager;
+            await crumbsRewardManager.addReview(userId);
+            await crumbsRewardManager.addReview(userId);
+            await crumbsRewardManager.addReview(userId);
+
+            // when
+            const transaction = await crumbsRewardManager.buyMembership(userId, 2);
+
+            // then
+            expect(await crumbsRewardManager.userTokensBalance(userId)).to.equal(0);
+            expect(await crumbsRewardManager.userMembership(userId)).to.equal(2);
+            await expect(transaction).to.emit(crumbsRewardManager, 'MembershipChanged')
+                .withArgs(userId, 2);
+            await expect(transaction).to.emit(crumbsRewardManager, 'UserBalanceChanged')
+                .withArgs(userId, 0);
+        });
+
+        [0, 1, 2].forEach(membership => {
+            it("Cannot buy not a higher membership", async () => {
+                // given
+                const contract = await ethers.getContractFactory("CrumbsRewardManager");
+                const crumbsRewardManager = await contract.deploy(ethers.Wallet.createRandom().address) as CrumbsRewardManager;
+                await crumbsRewardManager.addReview(userId);
+                await crumbsRewardManager.addReview(userId);
+                await crumbsRewardManager.addReview(userId);
+                await crumbsRewardManager.buyMembership(userId, 2);
+
+                // then
+                await expect(crumbsRewardManager.buyMembership(userId, membership))
+                    .revertedWith("Can only upgrade membership");
+            });
         });
     });
 });
