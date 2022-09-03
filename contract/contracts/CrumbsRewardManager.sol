@@ -27,6 +27,11 @@ contract CrumbsRewardManager is Ownable {
         membershipPrice[Membership.ADVANCED] = 30;
     }
 
+    modifier checkBalance(uint256 userId, uint256 minBalance) {
+        require(userTokensBalance[userId] >= minBalance, "insufficient funds");
+        _;
+    }
+
     function addReview(uint256 userId) public onlyOwner {
         userReviewsCount[userId] = userReviewsCount[userId] + 1;
         userTokensBalance[userId] = userTokensBalance[userId] + 10;
@@ -34,9 +39,9 @@ contract CrumbsRewardManager is Ownable {
         emit UserBalanceChanged(userId, userTokensBalance[userId]);
     }
 
-    function addLike(uint256 fromUserId, uint256 toUserId) public onlyOwner {
-        require(userTokensBalance[fromUserId] >= 1, "zero balance");
+    function addLike(uint256 fromUserId, uint256 toUserId) public onlyOwner checkBalance(fromUserId, 1) {
         require(fromUserId != toUserId, "user cannot like themselves");
+
         userLikesGivenCount[fromUserId] = userLikesGivenCount[fromUserId] + 1;
         userLikesReceivedCount[toUserId] = userLikesReceivedCount[toUserId] + 1;
         userTokensBalance[fromUserId] = userTokensBalance[fromUserId] - 1;
@@ -47,9 +52,8 @@ contract CrumbsRewardManager is Ownable {
         emit UserBalanceChanged(toUserId, userTokensBalance[toUserId]);
     }
 
-    function buyMembership(uint256 userId, Membership membership) public onlyOwner {
+    function buyMembership(uint256 userId, Membership membership) public onlyOwner checkBalance(userId, membershipPrice[membership]) {
         require(userMembership[userId] < membership, "Can only upgrade membership");
-        require(userTokensBalance[userId] >= membershipPrice[membership], "Insufficient funds to buy a membership");
 
         userTokensBalance[userId] = userTokensBalance[userId] - membershipPrice[membership];
         userMembership[userId] = membership;

@@ -78,7 +78,7 @@ describe("CrumbsRewardManager", async () => {
 
             // when
             await expect(crumbsRewardManager.addLike(123, 345))
-                .revertedWith("zero balance");
+                .revertedWith("insufficient funds");
         });
         it("Cannot like themselves", async () => {
             // given
@@ -197,6 +197,9 @@ describe("CrumbsRewardManager", async () => {
                 // given
                 const contract = await ethers.getContractFactory("CrumbsRewardManager");
                 const crumbsRewardManager = await contract.deploy(ethers.Wallet.createRandom().address) as CrumbsRewardManager;
+                await crumbsRewardManager.addReview(userId);
+                await crumbsRewardManager.addReview(userId);
+                await crumbsRewardManager.addReview(userId);
                 await crumbsRewardManager.addReview(userId);
                 await crumbsRewardManager.addReview(userId);
                 await crumbsRewardManager.addReview(userId);
