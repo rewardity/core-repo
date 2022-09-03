@@ -7,12 +7,12 @@ import { useGlobalState } from "./useGlobal";
 import { AvailableNetworks, networks } from "./networks";
 import { ethers } from "ethers";
 import { Input, VStack } from "@chakra-ui/react";
-import { CrumbsRewardManager } from "./typechain-types";
+import { RewardityManager } from "./typechain-types";
 
 function App() {
   const manager = useGlobalState(
     (state) => state.manager
-  ) as CrumbsRewardManager;
+  ) as RewardityManager;
   const setProvider = useGlobalState((state) => state.setProvider);
   const setUserAddress = useGlobalState((state) => state.setUserAddress);
   const userAddress = useGlobalState((state) => state.userAddress);

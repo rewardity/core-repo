@@ -1,3 +1,3 @@
 module.exports = [
-    "Crumbs token", "CRUMBS", "10000000000000000000000"
+    "Rewardity token", "REWARD", "10000000000000000000000"
 ];
