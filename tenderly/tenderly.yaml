@@ -1,0 +1,21 @@
+account_id: ""
+actions:
+  vitcos/project:
+    runtime: v1
+    sources: actions
+    specs:
+      helloWorldTransactions:
+        description: Transaction that recorded a fund withdrawal
+        function: CrumbsRewardManager:UserWithdrawal
+        trigger:
+          type: transaction
+          transaction:
+            filters:
+              - eventEmitted:
+                  contract:
+                    address: 0x24378a8CE7d01c586b031ceBfaA5F45de0DFb8CF
+                  name: UserWithdrawal
+                network: 100100
+            status:
+              - mined
+project_slug: ""
