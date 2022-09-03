@@ -1,6 +1,7 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 contract CrumbsRewardManager is Ownable {
 
@@ -20,8 +21,9 @@ contract CrumbsRewardManager is Ownable {
     event LikeAdded(uint256 fromUserId, uint256 toUserId, uint256 fromUserLikesGiven, uint256 toUserLikesReceived);
     event UserBalanceChanged(uint256 userId, uint256 newBalance);
     event MembershipChanged(uint256 userId, Membership newMembership);
+    event UserWithdrawal(uint256 userId, uint256 amount);
 
-    constructor(address _tokenAddress) {
+    constructor(address _tokenAddress) payable {
         tokenAddress = _tokenAddress;
         membershipPrice[Membership.STANDARD] = 10;
         membershipPrice[Membership.ADVANCED] = 30;
@@ -35,6 +37,7 @@ contract CrumbsRewardManager is Ownable {
     function addReview(uint256 userId) public onlyOwner {
         userReviewsCount[userId] = userReviewsCount[userId] + 1;
         userTokensBalance[userId] = userTokensBalance[userId] + 10;
+
         emit ReviewAdded(userId, userReviewsCount[userId]);
         emit UserBalanceChanged(userId, userTokensBalance[userId]);
     }
@@ -60,5 +63,15 @@ contract CrumbsRewardManager is Ownable {
 
         emit MembershipChanged(userId, userMembership[userId]);
         emit UserBalanceChanged(userId, userTokensBalance[userId]);
+    }
+
+    function withdrawTokens(uint256 userId, uint256 amount, address userAddress) public onlyOwner checkBalance(userId, amount) {
+        userTokensBalance[userId] = userTokensBalance[userId] - amount;
+
+        IERC20 token = IERC20(tokenAddress);
+        token.transfer(userAddress, amount);
+
+        emit UserBalanceChanged(userId, userTokensBalance[userId]);
+        emit UserWithdrawal(userId, amount);
     }
 }

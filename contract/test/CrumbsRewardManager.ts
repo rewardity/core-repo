@@ -1,6 +1,6 @@
 import {expect} from "chai";
 import {ethers} from "hardhat";
-import {CrumbsRewardManager} from "../typechain-types";
+import {CrumbsRewardManager, SimpleToken} from "../typechain-types";
 
 describe("CrumbsRewardManager", async () => {
 
@@ -24,7 +24,7 @@ describe("CrumbsRewardManager", async () => {
 
             const crumbsRewardManagerFromAnotherSigner = crumbsRewardManager.connect((await ethers.getSigners())[1]);
 
-            // when
+            // then
             await expect(crumbsRewardManagerFromAnotherSigner.addReview(123))
                 .revertedWith("Ownable: caller is not the owner");
         });
@@ -76,7 +76,7 @@ describe("CrumbsRewardManager", async () => {
             const contract = await ethers.getContractFactory("CrumbsRewardManager");
             const crumbsRewardManager = await contract.deploy(ethers.Wallet.createRandom().address) as CrumbsRewardManager;
 
-            // when
+            // then
             await expect(crumbsRewardManager.addLike(123, 345))
                 .revertedWith("insufficient funds");
         });
@@ -87,7 +87,7 @@ describe("CrumbsRewardManager", async () => {
             const userId = 123;
             await crumbsRewardManager.addReview(userId);
 
-            // when
+            // then
             await expect(crumbsRewardManager.addLike(userId, userId))
                 .revertedWith("user cannot like themselves");
         });
@@ -129,7 +129,6 @@ describe("CrumbsRewardManager", async () => {
                 .withArgs(user1Id, 9);
         });
     });
-
     describe("Buy membership action", async () => {
         const userId = 123;
 
@@ -140,7 +139,7 @@ describe("CrumbsRewardManager", async () => {
 
             const crumbsRewardManagerFromAnotherSigner = crumbsRewardManager.connect((await ethers.getSigners())[1]);
 
-            // when
+            // then
             await expect(crumbsRewardManagerFromAnotherSigner.buyMembership(userId, 2))
                 .revertedWith("Ownable: caller is not the owner");
         });
@@ -209,6 +208,50 @@ describe("CrumbsRewardManager", async () => {
                 await expect(crumbsRewardManager.buyMembership(userId, membership))
                     .revertedWith("Can only upgrade membership");
             });
+        });
+    });
+    describe("Withdrawal action", async () => {
+        it("Cannot be triggered by not an owner", async () => {
+            // given
+            const contract = await ethers.getContractFactory("CrumbsRewardManager");
+            const crumbsRewardManager = await contract.deploy(ethers.Wallet.createRandom().address) as CrumbsRewardManager;
+            const anotherSigner = (await ethers.getSigners())[1];
+
+            const crumbsRewardManagerFromAnotherSigner = crumbsRewardManager.connect(anotherSigner);
+
+            // then
+            await expect(crumbsRewardManagerFromAnotherSigner.withdrawTokens(123, 100, anotherSigner.address))
+                .revertedWith("Ownable: caller is not the owner");
+        });
+        it("Cannot withdraw if zero balance", async () => {
+            // given
+            const contract = await ethers.getContractFactory("CrumbsRewardManager");
+            const crumbsRewardManager = await contract.deploy(ethers.Wallet.createRandom().address) as CrumbsRewardManager;
+
+            // then
+            await expect(crumbsRewardManager.withdrawTokens(123, 100, ethers.Wallet.createRandom().address))
+                .revertedWith("insufficient funds");
+        });
+        it("Should allow user withdraw tokens", async () => {
+            // given
+            const userId = 123;
+            const amountToWithdraw = 6;
+            const userAddress = ethers.Wallet.createRandom().address;
+
+            const erc20Contract = await ethers.getContractFactory("SimpleToken");
+            const simpleTokenContract = await erc20Contract.deploy("SimpleToken", "TST", ethers.utils.parseEther("100000")) as SimpleToken;
+            const contract = await ethers.getContractFactory("CrumbsRewardManager");
+            const crumbsRewardManager = await contract.deploy(simpleTokenContract.address) as CrumbsRewardManager;
+            await simpleTokenContract.transfer(crumbsRewardManager.address, ethers.utils.parseEther("100000"));
+            await crumbsRewardManager.addReview(userId);
+
+            // when
+            const transaction = await crumbsRewardManager.withdrawTokens(userId, amountToWithdraw, userAddress);
+
+            // then
+            expect(await simpleTokenContract.balanceOf(userAddress)).to.equal(amountToWithdraw);
+            await expect(transaction).to.emit(crumbsRewardManager, 'UserBalanceChanged')
+                .withArgs(userId, 4);
         });
     });
 });
