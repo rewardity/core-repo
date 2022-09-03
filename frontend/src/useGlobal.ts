@@ -1,7 +1,7 @@
 import { Contract, ethers } from "ethers";
 import create from "zustand";
-import { CrumbsRewardManager } from "./typechain-types/contracts/CrumbsRewardManager";
-import ManagerContract from "./contracts/CrumbsRewardManager.json";
+import { RewardityManager } from "./typechain-types";
+import ManagerContract from "./contracts/RewardityManager.json";
 
 interface GlobalState {
   provider: any;
@@ -12,7 +12,7 @@ interface GlobalState {
   setManager: () => void;
 }
 
-const MANAGER_CONTRACT = "0xA30Cbc8351a7FfceE43A414BB197b296c1979767";
+const MANAGER_CONTRACT = "0x24378a8CE7d01c586b031ceBfaA5F45de0DFb8CF";
 
 export const useGlobalState = create<GlobalState>((set, get) => ({
   provider: undefined,
@@ -25,7 +25,7 @@ export const useGlobalState = create<GlobalState>((set, get) => ({
       MANAGER_CONTRACT,
       ManagerContract.abi,
       get().provider.getSigner()
-    ) as CrumbsRewardManager;
+    ) as RewardityManager;
 
     set({ manager: managerContract });
   },
