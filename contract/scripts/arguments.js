@@ -1,3 +1,3 @@
 module.exports = [
-    ["Test1", "TST", "100000000000000000000"],
+    "Crumbs token", "CRUMBS", "10000000000000000000000"
 ];
