@@ -10,7 +10,9 @@ import { Input, VStack } from "@chakra-ui/react";
 import { CrumbsRewardManager } from "./typechain-types";
 
 function App() {
-  const manager = useGlobalState((state) => state.manager) as CrumbsRewardManager;
+  const manager = useGlobalState(
+    (state) => state.manager
+  ) as CrumbsRewardManager;
   const setProvider = useGlobalState((state) => state.setProvider);
   const setUserAddress = useGlobalState((state) => state.setUserAddress);
   const userAddress = useGlobalState((state) => state.userAddress);

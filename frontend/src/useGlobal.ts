@@ -1,6 +1,6 @@
 import { Contract, ethers } from "ethers";
 import create from "zustand";
-import { CrumbsRewardManager } from "./contracts/CrumbsRewardManager";
+import { CrumbsRewardManager } from "./typechain-types/contracts/CrumbsRewardManager";
 import ManagerContract from "./contracts/CrumbsRewardManager.json";
 
 interface GlobalState {
