@@ -6,7 +6,7 @@ actions:
     specs:
       helloWorldTransactions:
         description: Transaction that recorded a fund withdrawal
-        function: hello:action
+        function: Rewardity:action
         trigger:
           type: transaction
           transaction:
