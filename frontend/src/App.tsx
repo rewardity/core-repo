@@ -2,16 +2,16 @@ import React, { useEffect, useState } from "react";
 import "./App.css";
 import { Button } from "@chakra-ui/button";
 import { Box, HStack } from "@chakra-ui/layout";
+import { Text } from "@chakra-ui/layout";
 import { useGlobalState } from "./useGlobal";
 import { AvailableNetworks, networks } from "./networks";
 import { ethers } from "ethers";
-import { Input, VStack } from "@chakra-ui/react";
+import { Image, Input, Spacer, VStack } from "@chakra-ui/react";
 import { RewardityManager } from "./typechain-types";
+import Logo from "./logo2.png";
 
 function App() {
-  const manager = useGlobalState(
-    (state) => state.manager
-  ) as RewardityManager;
+  const manager = useGlobalState((state) => state.manager) as RewardityManager;
   const setProvider = useGlobalState((state) => state.setProvider);
   const setUserAddress = useGlobalState((state) => state.setUserAddress);
   const userAddress = useGlobalState((state) => state.userAddress);
@@ -43,11 +43,6 @@ function App() {
 
   const handleAddLike = async () => {
     console.log("Calling [handleAddLike]");
-
-    const from = parseInt(addLikeFrom);
-    const to = parseInt(addLikeTo);
-    console.log(from);
-    console.log(to);
 
     const result = await manager.addLike(
       parseInt(addLikeFrom),
@@ -119,16 +114,26 @@ function App() {
     <div className="App">
       <Box>
         <Box
-          bg={"blue.300"}
-          w={"full"}
+          bg={"#2f5385"}
+          w={"80%"}
+          mx="auto"
           display={"flex"}
-          alignItems={"flex-start"}
+          alignItems={"center"}
+          justifyContent={"space-between"}
+          overflow={"hidden"}
+          borderBottomRadius={"20px"}
         >
+          <Image src={Logo} h={"80px"} />
+          <Spacer />
           <Button onClick={() => handleConnectWallet()} m={"20px"}>
             {userAddress ? userAddress : "Connect wallet"}
           </Button>
         </Box>
-        <Box h={"200px"} />
+        <Box h={"80px"} />
+        <Text fontWeight={"extrabold"} fontSize={"5xl"} textColor={"gray.700"}>
+          Rewardity manager
+        </Text>
+        <Box h={"30px"} />
         <Box w={"1200px"} mx={"auto"}>
           <VStack gap={"20px"} w={"full"}>
             <HStack w={"full"}>
@@ -136,6 +141,8 @@ function App() {
                 padding={"30px"}
                 w={"500px"}
                 onClick={() => handleAddReview()}
+                bg={"#2f5385"}
+                color={"white"}
               >
                 addReview
               </Button>
@@ -150,6 +157,8 @@ function App() {
                 padding={"30px"}
                 w={"300px"}
                 onClick={() => handleAddLike()}
+                bg={"#2f5385"}
+                color={"white"}
               >
                 addLike
               </Button>
@@ -165,7 +174,13 @@ function App() {
               ></Input>
             </HStack>
             <HStack w={"full"}>
-              <Button padding={"30px"} w={"400px"} onClick={() => handleBuy()}>
+              <Button
+                padding={"30px"}
+                w={"400px"}
+                onClick={() => handleBuy()}
+                bg={"#2f5385"}
+                color={"white"}
+              >
                 buyMembership
               </Button>
               <Input
@@ -184,6 +199,8 @@ function App() {
                 padding={"30px"}
                 w={"500px"}
                 onClick={() => handleWithdraw()}
+                bg={"#2f5385"}
+                color={"white"}
               >
                 withdrawTokens
               </Button>
