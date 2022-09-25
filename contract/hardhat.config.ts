@@ -6,23 +6,22 @@ import "@nomiclabs/hardhat-etherscan";
 
 dotenv.config();
 
+const ALCHEMY_API_KEY = process.env.ALCHEMY_API_KEY;
 const TESTNET_PRIVATE_KEY = process.env.TESTNET_PRIVATE_KEY;
-
-const defaultNetwork = 'gnosis';
+const POLYGON_SCAN_API_KEY = process.env.POLYGON_SCAN_API_KEY;
 
 const config: HardhatUserConfig = {
   solidity: "0.8.15",
   networks: {
-    gnosis: {
-      url: 'https://rpc.gnosischain.com/',
-      gasPrice: 1000000000,
+    polygonMumbai: {
+      url: `https://polygon-mumbai.g.alchemy.com/v2/${ALCHEMY_API_KEY}`,
       accounts: [`${TESTNET_PRIVATE_KEY}`]
     },
-    chiado: {
-      url: 'https://rpc-chiado.gnosistestnet.com',
-      gasPrice: 1000000000,
-      accounts: [`${TESTNET_PRIVATE_KEY}`]
-    },
+  },
+  etherscan: {
+    apiKey: {
+      polygonMumbai: `${POLYGON_SCAN_API_KEY}`,
+    }
   },
 };
 

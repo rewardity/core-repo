@@ -8,7 +8,7 @@ async function main() {
   // console.log("SimpleToken deployed to:", simpleToken.address);
 
   const RewardityManager = await ethers.getContractFactory("RewardityManager");
-  const manager = await RewardityManager.deploy("0x9f8312aFdBfB83C4859cCC4b74CEE74b2ca1ff72");
+  const manager = await RewardityManager.deploy("0xD898CD70Cd157D92693aD736df7DDef4373CE6CC");
   await manager.deployed();
 
   console.log("RewardityManager deployed to:", manager.address);

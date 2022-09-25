@@ -12,7 +12,7 @@ interface GlobalState {
   setManager: () => void;
 }
 
-const MANAGER_CONTRACT = "0x24378a8CE7d01c586b031ceBfaA5F45de0DFb8CF";
+const MANAGER_CONTRACT = "0xB021c9Ada326Ed7e7B2a395bf5D06abca0302fC0";
 
 export const useGlobalState = create<GlobalState>((set, get) => ({
   provider: undefined,
