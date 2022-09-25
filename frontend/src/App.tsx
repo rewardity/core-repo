@@ -9,6 +9,7 @@ import { ethers } from "ethers";
 import { Image, Input, Spacer, VStack } from "@chakra-ui/react";
 import { RewardityManager } from "./typechain-types";
 import Logo from "./logo2.png";
+import { uploadIpfs } from "./ipfs"
 
 function App() {
   const manager = useGlobalState((state) => state.manager) as RewardityManager;
@@ -29,6 +30,8 @@ function App() {
   const [withdrawAmount, setWithdrawAmount] = useState("");
   const [withdrawAddress, setWithdrawAddress] = useState("");
 
+  const NFT_STORAGE_API_KEY = ""
+
   useEffect(() => {
     console.log(userAddress);
   }, [userAddress]);
@@ -39,6 +42,14 @@ function App() {
     const result = await manager.addReview(parseInt(addReviewUserId));
 
     console.log(result);
+  };
+
+  const handleUploadIpfs = async (content: string) => {
+    console.log("Calling [handleUploadIpfs]");
+
+    const cid = await uploadIpfs(NFT_STORAGE_API_KEY, content)
+    const ipfsLink = `https://${cid}.ipfs.nftstorage.link`;
+    console.log(ipfsLink);
   };
 
   const handleAddLike = async () => {
