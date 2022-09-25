@@ -1,6 +1,6 @@
-<p align="center"><a target="_blank" href="https://devpost.com/software/rewardity"><img src="logo.png" alt="Rewardity" width="600"/></a></p>
+<p align="center"><a target="_blank" href="TODO"><img src="logo.png" alt="Rewardity" width="600"/></a></p>
 
-<p align="center">DevPost showcase URL: https://devpost.com/software/rewardity</p>
+<p align="center">Showcase URL: TODO</p>
 
 ##### Table of Contents
 - [Description](#description)
@@ -19,17 +19,14 @@
 
 ### Solution
 **Rewardity** provides:
-* a set of **well tested** (just check our tests + tested on **Gnosis**) smart contracts to set up a simple reward/likes/loyalty/rating etc. system.
-* with a help of **Tenderly Actions** you can easily monitor your solution. Like keep track of token remains, stats and many other.
-* with a help of **Tenderly Actions** as well you can easily integrate on-chain solution with more traditional backend and other services. Want to send an email once some user left a review on your platform? We are here to help!
+* a set of **well tested** (just check our tests + tested on **Polygon**) smart contracts to set up a simple reward/likes/loyalty/rating etc. system.
 * A small and tiny backoffice UI to test and keep track of activity on your platform. Want to manually adjust reward of some user? We can help!
 
 ## Architecture and used dependencies
 ### Current state
 * Smart contracts are covered with plenty of unit tests.
-* Smart contracts deployed and tested on **Gnosis**. Example contracts: https://blockscout-chiado.gnosistestnet.com/token/0x9f8312aFdBfB83C4859cCC4b74CEE74b2ca1ff72 and https://blockscout-chiado.gnosistestnet.com/address/0x24378a8CE7d01c586b031ceBfaA5F45de0DFb8CF
+* Smart contracts deployed and tested on **Polygon**. Example contracts: https://mumbai.polygonscan.com/token/0xD898CD70Cd157D92693aD736df7DDef4373CE6CC and https://mumbai.polygonscan.com/address/0xB021c9Ada326Ed7e7B2a395bf5D06abca0302fC0
 * A web backoffice application to test or adjust rewards.
-* Set of action rules for **Tenderly** to monitor the solution and communicate with other services.
 
 ### Potential further improvements
 * Add unique rewards (in form NFTs for example).
