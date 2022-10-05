@@ -1,7 +1,7 @@
-import { Contract, ethers } from "ethers";
+import { ethers } from "ethers";
 import create from "zustand";
-import { RewardityManager } from "./typechain-types";
-import ManagerContract from "./contracts/RewardityManager.json";
+import { RewardityManager } from "../contracts/typechain-types/contracts/RewardityManager";
+import ManagerContract from "../contracts/artifacts/RewardityManager.json";
 
 interface GlobalState {
   provider: any;

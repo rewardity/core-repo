@@ -3,13 +3,13 @@ import "./App.css";
 import { Button } from "@chakra-ui/button";
 import { Box, HStack } from "@chakra-ui/layout";
 import { Text } from "@chakra-ui/layout";
-import { useGlobalState } from "./useGlobal";
-import { AvailableNetworks, networks } from "./networks";
+import { useGlobalState } from "./stores/useGlobal";
+import { AvailableNetworks, networks } from "./constants/networks";
 import { ethers } from "ethers";
 import { Image, Input, Spacer, VStack } from "@chakra-ui/react";
-import { RewardityManager } from "./typechain-types";
-import Logo from "./logo2.png";
-import { uploadIpfs } from "./ipfs"
+import { RewardityManager } from "./contracts/typechain-types/contracts/RewardityManager";
+import Logo from "./assets/logo2.png";
+import { uploadIpfs } from "./utils/ipfs";
 
 function App() {
   const manager = useGlobalState((state) => state.manager) as RewardityManager;
@@ -30,7 +30,7 @@ function App() {
   const [withdrawAmount, setWithdrawAmount] = useState("");
   const [withdrawAddress, setWithdrawAddress] = useState("");
 
-  const NFT_STORAGE_API_KEY = ""
+  const NFT_STORAGE_API_KEY = "";
 
   useEffect(() => {
     console.log(userAddress);
@@ -47,7 +47,7 @@ function App() {
   const handleUploadIpfs = async (content: string) => {
     console.log("Calling [handleUploadIpfs]");
 
-    const cid = await uploadIpfs(NFT_STORAGE_API_KEY, content)
+    const cid = await uploadIpfs(NFT_STORAGE_API_KEY, content);
     const ipfsLink = `https://${cid}.ipfs.nftstorage.link`;
     console.log(ipfsLink);
   };
@@ -89,18 +89,20 @@ function App() {
   const handleConnectWallet = async () => {
     try {
       if (!window.ethereum) throw new Error("Cannot find MetaMask");
-      console.log("1234");
 
       // Switch networks
       await window.ethereum.request({
         method: "wallet_addEthereumChain",
         params: [
           {
-            ...networks[AvailableNetworks.CHAIDO],
+            ...networks[
+              process.env.NODE_ENV === "development"
+                ? AvailableNetworks.LOCAL
+                : AvailableNetworks.MUMBAI
+            ],
           },
         ],
       });
-      console.log("12345");
 
       // Set up wallet
       const provider = new ethers.providers.Web3Provider(

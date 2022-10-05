@@ -2,7 +2,7 @@
   "name": "hardhat-project",
   "scripts": {
     "test": "hardhat test",
-    "build": "hardhat compile --verbose && (rm -Rf ../frontend/src/typechain-types || true) && cp -R typechain-types ../frontend/src"
+    "build": "hardhat compile --verbose && (rm -Rf ../frontend/src/contracts/typechain-types || true) && cp -R typechain-types ../frontend/src/contracts"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-chai-matchers": "^1.0.2",
