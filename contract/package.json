@@ -2,7 +2,9 @@
   "name": "hardhat-project",
   "scripts": {
     "test": "hardhat test",
-    "build": "hardhat compile --verbose && (rm -Rf ../frontend/src/contracts/typechain-types || true) && cp -R typechain-types ../frontend/src/contracts"
+    "build": "hardhat compile --verbose && (rm -Rf ../frontend/src/contracts || true) && cp -R typechain-types ../frontend/src/contracts/typechain && cp -R ./artifacts ../frontend/src/contracts/artifacts",
+    "build:ws": "hardhat compile --verbose && xcopy /s /q /y /i \"./typechain-types\" \"../frontend/src/contracts/typechain\" && xcopy /s /q /y /i \"./artifacts\" \"../frontend/src/contracts/artifacts\" ",
+    "deploy:local": "hardhat deploy --network localhost scripts/deploy.ts"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-chai-matchers": "^1.0.2",
