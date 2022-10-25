@@ -4,7 +4,7 @@ import { Route, Routes } from "react-router-dom";
 import { useApplicationInitialization } from "./hooks/useApplicationInitialiation";
 import { useWallet } from "./hooks/useWallet";
 import { NavigationBar } from "./components/NavigationBar";
-import BackOffice from "./components/pages/BackOffice";
+import { Dashboard } from "./components/pages/Dashboard";
 import { LandingPage } from "./components/pages/LandingPage";
 
 const App: React.FC<{}> = () => {
@@ -20,7 +20,7 @@ const App: React.FC<{}> = () => {
       <NavigationBar />
       <Routes>
         <Route path="/" element={<LandingPage />} />
-        <Route path="/dashboard" element={<BackOffice />} />
+        <Route path="/dashboard" element={<Dashboard />} />
       </Routes>
     </>
   );

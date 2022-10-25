@@ -4,29 +4,26 @@ import { Box, HStack } from "@chakra-ui/layout";
 import { Text } from "@chakra-ui/layout";
 import { Center, Input, VStack } from "@chakra-ui/react";
 import { useContracts } from "../../stores/useContracts";
-import { useUserData } from "../../stores/useUserData";
 
-const BackOffice: React.FC<{}> = () => {
+export const Dashboard: React.FC<{}> = () => {
   const manager = useContracts((state) => state.manager);
 
-  
   const [addReviewUserId, setAddReviewUserId] = useState("");
-  
+
   const [addLikeFrom, setAddLikeFrom] = useState("");
   const [addLikeTo, setAddLikeTo] = useState("");
-  
+
   const [buyId, setBuyId] = useState("");
   const [buyMembership, setBuyMembership] = useState("");
-  
+
   const [withdrawId, setWithdrawId] = useState("");
   const [withdrawAmount, setWithdrawAmount] = useState("");
   const [withdrawAddress, setWithdrawAddress] = useState("");
 
-
   const handleAddReview = async () => {
     console.log("Calling [handleAddReview]");
 
-    if(!manager) return;
+    if (!manager) return;
 
     const result = await manager.addReview(parseInt(addReviewUserId));
 
@@ -36,7 +33,7 @@ const BackOffice: React.FC<{}> = () => {
   const handleAddLike = async () => {
     console.log("Calling [handleAddLike]");
 
-    if(!manager) return;
+    if (!manager) return;
 
     const result = await manager.addLike(
       parseInt(addLikeFrom),
@@ -49,7 +46,7 @@ const BackOffice: React.FC<{}> = () => {
   const handleWithdraw = async () => {
     console.log("Calling [handleWithdraw]");
 
-    if(!manager) return;
+    if (!manager) return;
 
     const result = await manager.withdrawTokens(
       parseInt(withdrawId),
@@ -63,7 +60,7 @@ const BackOffice: React.FC<{}> = () => {
   const handleBuy = async () => {
     console.log("Calling [handleBuy]");
 
-    if(!manager) return;
+    if (!manager) return;
 
     const result = await manager.buyMembership(
       parseInt(buyId),
@@ -78,7 +75,11 @@ const BackOffice: React.FC<{}> = () => {
       <Box>
         <Box h={"80px"} />
         <Center>
-          <Text fontWeight={"extrabold"} fontSize={"5xl"} textColor={"gray.700"}>
+          <Text
+            fontWeight={"extrabold"}
+            fontSize={"5xl"}
+            textColor={"gray.700"}
+          >
             Rewardity manager
           </Text>
         </Center>
@@ -174,6 +175,4 @@ const BackOffice: React.FC<{}> = () => {
       </Box>
     </div>
   );
-}
-
-export default BackOffice;
+};
