@@ -1,22 +1,18 @@
-import React, { useEffect, useState } from "react";
-import "./App.css";
+import { useEffect, useState } from "react";
 import { Button } from "@chakra-ui/button";
 import { Box, HStack } from "@chakra-ui/layout";
 import { Text } from "@chakra-ui/layout";
-import { useGlobalState } from "./stores/useGlobal";
-import { AvailableNetworks, networks } from "./constants/networks";
-import { ethers } from "ethers";
-import { Image, Input, Spacer, VStack } from "@chakra-ui/react";
-import { RewardityManager } from "./contracts/typechain-types/contracts/RewardityManager";
+import { Center, Image, Input, Spacer, VStack } from "@chakra-ui/react";
 import Logo from "./assets/logo2.png";
-import { uploadIpfs } from "./utils/ipfs";
+import { useUserData } from "./stores/useUserData";
+import { useContracts } from "./stores/useContracts";
+import { useWallet } from "./hooks/useWallet";
 
 function App() {
-  const manager = useGlobalState((state) => state.manager) as RewardityManager;
-  const setProvider = useGlobalState((state) => state.setProvider);
-  const setUserAddress = useGlobalState((state) => state.setUserAddress);
-  const userAddress = useGlobalState((state) => state.userAddress);
-  const setManager = useGlobalState((state) => state.setManager);
+  const userAddress = useUserData((state) => state.address);
+  const manager = useContracts((state) => state.manager);
+
+  const [,connectWallet] = useWallet();
 
   const [addReviewUserId, setAddReviewUserId] = useState("");
 
@@ -30,30 +26,24 @@ function App() {
   const [withdrawAmount, setWithdrawAmount] = useState("");
   const [withdrawAddress, setWithdrawAddress] = useState("");
 
-  const NFT_STORAGE_API_KEY = "";
-
   useEffect(() => {
-    console.log(userAddress);
-  }, [userAddress]);
+    connectWallet();
+  }, [connectWallet]);
 
   const handleAddReview = async () => {
     console.log("Calling [handleAddReview]");
+
+    if(!manager) return;
 
     const result = await manager.addReview(parseInt(addReviewUserId));
 
     console.log(result);
   };
 
-  const handleUploadIpfs = async (content: string) => {
-    console.log("Calling [handleUploadIpfs]");
-
-    const cid = await uploadIpfs(NFT_STORAGE_API_KEY, content);
-    const ipfsLink = `https://${cid}.ipfs.nftstorage.link`;
-    console.log(ipfsLink);
-  };
-
   const handleAddLike = async () => {
     console.log("Calling [handleAddLike]");
+
+    if(!manager) return;
 
     const result = await manager.addLike(
       parseInt(addLikeFrom),
@@ -65,6 +55,8 @@ function App() {
 
   const handleWithdraw = async () => {
     console.log("Calling [handleWithdraw]");
+
+    if(!manager) return;
 
     const result = await manager.withdrawTokens(
       parseInt(withdrawId),
@@ -78,49 +70,14 @@ function App() {
   const handleBuy = async () => {
     console.log("Calling [handleBuy]");
 
+    if(!manager) return;
+
     const result = await manager.buyMembership(
       parseInt(buyId),
       parseInt(buyMembership)
     );
 
     console.log(result);
-  };
-
-  const handleConnectWallet = async () => {
-    try {
-      if (!window.ethereum) throw new Error("Cannot find MetaMask");
-
-      // Switch networks
-      await window.ethereum.request({
-        method: "wallet_addEthereumChain",
-        params: [
-          {
-            ...networks[
-              process.env.NODE_ENV === "development"
-                ? AvailableNetworks.LOCAL
-                : AvailableNetworks.MUMBAI
-            ],
-          },
-        ],
-      });
-
-      // Set up wallet
-      const provider = new ethers.providers.Web3Provider(
-        window.ethereum,
-        "any"
-      );
-      await provider.send("eth_requestAccounts", []);
-      const signer = provider.getSigner();
-      const address = await signer.getAddress();
-
-      if (!signer) throw new Error("Metamask is not connected");
-
-      setProvider(provider);
-      setUserAddress(address);
-      setManager();
-    } catch (error: any) {
-      console.log(error);
-    }
   };
 
   return (
@@ -138,14 +95,16 @@ function App() {
         >
           <Image src={Logo} h={"80px"} />
           <Spacer />
-          <Button onClick={() => handleConnectWallet()} m={"20px"}>
+          <Button onClick={() => connectWallet()} m={"20px"}>
             {userAddress ? userAddress : "Connect wallet"}
           </Button>
         </Box>
         <Box h={"80px"} />
-        <Text fontWeight={"extrabold"} fontSize={"5xl"} textColor={"gray.700"}>
-          Rewardity manager
-        </Text>
+        <Center>
+          <Text fontWeight={"extrabold"} fontSize={"5xl"} textColor={"gray.700"}>
+            Rewardity manager
+          </Text>
+        </Center>
         <Box h={"30px"} />
         <Box w={"1200px"} mx={"auto"}>
           <VStack gap={"20px"} w={"full"}>
