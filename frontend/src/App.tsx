@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
-import { useToast } from "@chakra-ui/react";
 
 import { useApplicationInitialization } from "./hooks/useApplicationInitialiation";
 import { useWallet } from "./hooks/useWallet";
@@ -21,7 +20,7 @@ const App: React.FC<{}> = () => {
       <NavigationBar />
       <Routes>
         <Route path="/" element={<LandingPage />} />
-        <Route path="/back-office" element={<BackOffice />} />
+        <Route path="/dashboard" element={<BackOffice />} />
       </Routes>
     </>
   );

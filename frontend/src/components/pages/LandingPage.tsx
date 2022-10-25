@@ -13,7 +13,7 @@ export const LandingPage: React.FC<LandingPageProps> = () => {
         <Box h={"2"} />
         <Grid templateColumns="repeat(2, 1fr)" gap={6}></Grid>
       </Box>
-      <Link to={"/back-office"}>landing page content</Link>
+      <Link to={"/dashboard"}>Go to Dashboard</Link>
     </Container>
   );
 };
