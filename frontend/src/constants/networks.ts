@@ -7,7 +7,7 @@ interface NetworkDetails {
     decimals: number;
   };
   rpcUrls: string[];
-  blockExplorerUrls: string[];
+  blockExplorerUrls: string[] | null;
 }
 
 export enum AvailableNetworks {
@@ -25,7 +25,7 @@ export const networks: { [network in AvailableNetworks]: NetworkDetails } = {
       decimals: 18,
     },
     rpcUrls: ["http://localhost:8545"],
-    blockExplorerUrls: ["https://mumbai.polygonscan.com/"],
+    blockExplorerUrls: null,
   },
   mumbai: {
     chainId: `0x${Number(80001).toString(16)}`,
