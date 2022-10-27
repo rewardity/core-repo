@@ -1,6 +1,11 @@
 import { extendTheme } from "@chakra-ui/react";
 
 const theme = extendTheme({
+  colors: {
+    brand: {
+      blue: "#0091FF",
+    },
+  },
   fonts: {
     navLink: `'Exo 2', sans-serif`,
     box: `'Exo 2', sans-serif`,
