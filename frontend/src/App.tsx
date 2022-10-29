@@ -5,7 +5,7 @@ import { useApplicationInitialization } from "./hooks/useApplicationInitialiatio
 import { useWallet } from "./hooks/useWallet";
 import { NavigationBar } from "./components/NavigationBar";
 import { Dashboard } from "./components/pages/Dashboard";
-import { LandingPage } from "./components/pages/LandingPage";
+import { LandingPage } from "./components/pages/LandingPage/LandingPage";
 
 const App: React.FC<{}> = () => {
   useApplicationInitialization();
